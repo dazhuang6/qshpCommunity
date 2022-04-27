@@ -13,20 +13,15 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
-@ContextConfiguration(classes = CommunityApplication.class)
 class CommunityApplicationTests {
-    @Resource
-    DiscussPostMapper discussPostMapper;
 
     @Test
     void contextLoads() {
-        List<DiscussPost> list = discussPostMapper.selectDiscussPosts(149, 0, 10);
-        for(DiscussPost post : list) {
-            System.out.println(post);
-        }
-
-        int rows = discussPostMapper.selectDiscussPostRows(149);
-        System.out.println(rows);
+        String a = new String("abc");
+        String b = "abc";
+        String c = "abc";
+        System.out.println(a==b);
+        System.out.println(b==c);
     }
 
 }
