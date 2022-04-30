@@ -14,4 +14,5 @@ public interface UserService {
     LoginTicket findLoginTicket(String ticket);
     void updateHeader(int userId, String headerUrl);
     Map<String, Object> updatePassword(int userId, String oldPwd, String newPwd);
+    User findUserByName(String username);
 }

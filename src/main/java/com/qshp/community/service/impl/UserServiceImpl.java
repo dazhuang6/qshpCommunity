@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -46,6 +47,7 @@ public class UserServiceImpl implements UserService , CommunityConstant {
         return userMapper.selectById(id);
     }
 
+    @Transactional
     @Override
     public Map<String, Object> register(User user) {
         Map<String, Object> map = new HashMap<>();
@@ -84,8 +86,7 @@ public class UserServiceImpl implements UserService , CommunityConstant {
         // 注册用户
         user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
         user.setPassword(CommunityUtil.md5(user.getPassword() + user.getSalt()));
-        user.setType(0);
-        user.setStatus(0);
+        user.setType(0).setStatus(0);
         user.setActivationCode(CommunityUtil.generateUUID());
         user.setHeaderUrl(String.format("http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000)));
         user.setCreateTime(new Date());
@@ -200,5 +201,10 @@ public class UserServiceImpl implements UserService , CommunityConstant {
         String newPassword = CommunityUtil.md5(newPwd + user.getSalt());
         userMapper.updatePassword(user.getId(), newPassword);
         return map;
+    }
+
+    @Override
+    public User findUserByName(String username) {
+        return userMapper.selectByName(username);
     }
 }
