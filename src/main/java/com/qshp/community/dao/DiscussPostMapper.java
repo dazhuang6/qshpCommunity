@@ -31,6 +31,7 @@ public interface DiscussPostMapper {
     })
     int selectDiscussPostRows(@Param("userId") int userId);
 
+    @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     @Insert({
             "insert into discuss_post(user_id, title, content, type, status, create_time, comment_count, score)",
                     "values(#{userId},#{title},#{content},#{type},#{status},#{createTime},#{commentCount},#{score})"
@@ -42,5 +43,9 @@ public interface DiscussPostMapper {
 
     @Update("update discuss_post set comment_count = #{commentCount} where id = #{id}")
     int updateCommentCount(@Param("id") int id, @Param("commentCount") int commentCount);
+
+    //用于导入es
+    @Select("select * from discuss_post")
+    List<DiscussPost> selectDiscussPostsAll();
 
 }
