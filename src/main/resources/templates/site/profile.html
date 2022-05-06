@@ -21,12 +21,12 @@
 				<div class="position-relative">
 					<ul class="nav nav-tabs">
 						<li class="nav-item">
-							<a class="nav-link active" href="profile.html">个人信息</a>
+							<a class="nav-link active">个人信息</a>
 						</li>
-						<li class="nav-item">
+						<li class="nav-item" th:if="${loginUser!=null && loginUser.id==user.id }">
 							<a class="nav-link" href="my-post.html">我的帖子</a>
 						</li>
-						<li class="nav-item">
+						<li class="nav-item" th:if="${loginUser!=null && loginUser.id==user.id}">
 							<a class="nav-link" href="my-reply.html">我的回复</a>
 						</li>
 					</ul>

@@ -84,7 +84,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
             if (contentField != null) {
                 discussPost.setContent(contentField.getFragments()[0].toString());
             }
-            System.out.println(discussPost);
+//            System.out.println(discussPost);
             list.add(discussPost);
         }
         return list;
