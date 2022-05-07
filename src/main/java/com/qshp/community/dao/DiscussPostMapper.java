@@ -48,4 +48,10 @@ public interface DiscussPostMapper {
     @Select("select * from discuss_post")
     List<DiscussPost> selectDiscussPostsAll();
 
+    @Update("update discuss_post set type = #{type} where id = #{id}")
+    int updateType(@Param("id") int id, @Param("type") int type);
+
+    @Update("update discuss_post set status = #{status} where id = #{id}")
+    int updateStatus(@Param("id") int id,@Param("status") int status);
+
 }
