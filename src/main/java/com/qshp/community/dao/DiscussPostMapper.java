@@ -14,10 +14,16 @@ public interface DiscussPostMapper {
             "<if test='userId!=0'>",
                 "and user_id = #{userId}",
             "</if>",
-            "order by type desc, create_time desc limit #{offset}, #{limit}",
+            "<if test='orderMode==0'>",
+            "order by type desc, create_time desc",
+            "</if>",
+            "<if test='orderMode==1'>",
+            "order by type desc, score desc, create_time desc",
+            "</if>",
+            "limit #{offset}, #{limit}",
             "</script>"
     })
-    List<DiscussPost> selectDiscussPosts(@Param("userId") int userId, @Param("offset") int offset, @Param("limit")int limit);
+    List<DiscussPost> selectDiscussPosts(@Param("userId") int userId, @Param("offset") int offset, @Param("limit")int limit, @Param("orderMode") int orderMode);
 
     // @Param注解用于给参数取别名,
     // 如果只有一个参数,并且在<if>里使用,则必须加别名.
@@ -53,5 +59,8 @@ public interface DiscussPostMapper {
 
     @Update("update discuss_post set status = #{status} where id = #{id}")
     int updateStatus(@Param("id") int id,@Param("status") int status);
+
+    @Update("update discuss_post set score = #{score} where id = #{id}")
+    int updateScore(@Param("id") int id, @Param("score") double score);
 
 }

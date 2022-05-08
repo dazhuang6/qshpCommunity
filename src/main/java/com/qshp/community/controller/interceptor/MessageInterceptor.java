@@ -8,16 +8,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class MessageInterceptor implements HandlerInterceptor {
 
-    @Autowired
+    @Resource
     private HostHolder hostHolder;
 
-    @Autowired
+    @Resource
     private MessageService messageService;
 
     @Override
