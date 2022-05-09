@@ -17,7 +17,7 @@ public class Event {
     private int entityUserId;
     private Map<String, Object> data = new HashMap<>();
 
-    public Event setData(String key, int value) {
+    public Event setData(String key, Object value) {
         this.data.put(key, value);
         return this;
     }
