@@ -6,7 +6,7 @@
 	<link rel="icon" th:href="@{/img/icon.png}"/>
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
-	<title>清水河畔-首页</title>
+	<title>清水河畔-个人主页</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -24,10 +24,10 @@
 							<a class="nav-link active">个人信息</a>
 						</li>
 						<li class="nav-item" th:if="${loginUser!=null && loginUser.id==user.id }">
-							<a class="nav-link" href="my-post.html">我的帖子</a>
+							<a class="nav-link" th:href="@{/user/discussPost}">我的帖子</a>
 						</li>
 						<li class="nav-item" th:if="${loginUser!=null && loginUser.id==user.id}">
-							<a class="nav-link" href="my-reply.html">我的回复</a>
+							<a class="nav-link" th:href="@{/user/comment}">我的回复</a>
 						</li>
 					</ul>
 				</div>

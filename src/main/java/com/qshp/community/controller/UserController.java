@@ -1,10 +1,11 @@
 package com.qshp.community.controller;
 
 import com.qshp.community.annotation.LoginRequired;
+import com.qshp.community.entity.Comment;
+import com.qshp.community.entity.DiscussPost;
+import com.qshp.community.entity.Page;
 import com.qshp.community.entity.User;
-import com.qshp.community.service.FollowService;
-import com.qshp.community.service.LikeService;
-import com.qshp.community.service.UserService;
+import com.qshp.community.service.*;
 import com.qshp.community.util.CommunityConstant;
 import com.qshp.community.util.CommunityUtil;
 import com.qshp.community.util.HostHolder;
@@ -29,6 +30,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -57,6 +61,12 @@ public class UserController implements CommunityConstant {
 
     @Resource
     FollowService followService;
+
+    @Resource
+    DiscussPostService discussPostService;
+
+    @Resource
+    CommentService commentService;
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
@@ -170,6 +180,73 @@ public class UserController implements CommunityConstant {
         model.addAttribute("hasFollowed", hasFollowed);
 
         return "/site/profile";
+    }
+
+    @LoginRequired
+    @RequestMapping(path = "/discussPost", method = RequestMethod.GET)
+    public String myDiscussPost(Page page, Model model){
+        User user = hostHolder.getUser();
+        int count = discussPostService.findDiscussPostRows(user.getId());
+        // 分页信息
+        page.setLimit(5);
+        page.setPath("/user/discussPost");
+        page.setRows(count);
+
+        List<DiscussPost> list = discussPostService.findDiscussPosts(user.getId(), page.getOffset(), page.getLimit(), 0);
+        List<Map<String, Object>> discussPosts = new ArrayList<>();
+        if (list != null) {
+            for (DiscussPost post : list) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("post", post);
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
+
+                discussPosts.add(map);
+            }
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("count", count);
+        model.addAttribute("discussPosts", discussPosts);
+        model.addAttribute("orderMode", 0);
+        return "/site/my-post";
+    }
+
+    @LoginRequired
+    @RequestMapping(path = "/comment", method = RequestMethod.GET)
+    public String myComment(Page page, Model model){
+        User user = hostHolder.getUser();
+        int count = commentService.findMyCommentCount(user.getId());
+        // 分页信息
+        page.setLimit(5);
+        page.setPath("/user/comment");
+        page.setRows(count);
+
+        List<Comment> list = commentService.findCommentsByUserId(user.getId(), page.getOffset(), page.getLimit());
+        List<Map<String, Object>> comments = new ArrayList<>();
+        if (list != null) {
+            for (Comment comment : list) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("comment", comment);
+
+                Comment comment1 = new Comment();
+                DiscussPost post = new DiscussPost();
+                if (comment.getEntityType()==ENTITY_TYPE_POST){
+                    post = discussPostService.findDiscussPostById(comment.getEntityId());
+                }else if (comment.getEntityType()==ENTITY_TYPE_COMMENT){
+                    comment1 = commentService.findCommentById(comment.getEntityId());
+                }
+                map.put("post", post);
+                map.put("comment1", comment1);
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_COMMENT, comment.getId());
+                map.put("likeCount", likeCount);
+
+                comments.add(map);
+            }
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("count", count);
+        model.addAttribute("comments", comments);
+        return "/site/my-reply";
     }
 
 }
